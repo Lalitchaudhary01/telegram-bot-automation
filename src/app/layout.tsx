@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { NavbarMenu } from "@/components/ui/navbar-menu";
+import Navbar from "@/components/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 export const metadata: Metadata = {
   title: "Telegram Bot Platform",
@@ -13,11 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <NavbarMenu /> {/* ✅ Imported navbar here */}
-        {children}
-      </body>
-    </html>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
+      <html lang="en">
+        <body>
+          <Navbar /> {/* ✅ Imported navbar here */}
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
