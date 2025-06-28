@@ -1,20 +1,15 @@
-// components/Navbar.tsx
 "use client";
-
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const router = useRouter();
   const { user } = useUser();
+  const router = useRouter();
 
-  const handleDashboardRedirect = () => {
-    const role = user?.publicMetadata?.role;
-
-    if (role === "ADMIN") router.push("/dashboard/admin");
-    else if (role === "RESELLER") router.push("/dashboard/reseller");
-    else router.push("/dashboard/user");
+  const goToDashboard = () => {
+    const role = user?.publicMetadata?.role || "user";
+    router.push(`/dashboard/${role}`);
   };
 
   return (
@@ -25,32 +20,26 @@ export default function Navbar() {
           🧠 AdBot
         </Link>
 
-        {/* Nav Buttons */}
+        {/* Buttons */}
         <div className="flex items-center gap-4">
-          <Link href="/pricing" className="hover:underline">
-            Pricing
-          </Link>
+          <Link href="/pricing">Pricing</Link>
 
-          {/* If user is signed out */}
           <SignedOut>
             <Link
               href="/sign-in"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md"
             >
               Login
             </Link>
           </SignedOut>
 
-          {/* If user is signed in */}
           <SignedIn>
             <button
-              onClick={handleDashboardRedirect}
+              onClick={goToDashboard}
               className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md"
             >
               Dashboard
             </button>
-
-            {/* Clerk's User Button Dropdown */}
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
         </div>
