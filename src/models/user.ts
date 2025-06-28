@@ -1,26 +1,17 @@
-// models/User.js
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, models, model } from "mongoose";
 
-const UserSchema = new mongoose.Schema({
-  clerkId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "USER", // default for now
-    enum: ["USER", "ADMIN", "RESELLER"],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+export interface IUser extends Document {
+  clerkId: string;
+  email: string;
+  role: "USER" | "ADMIN" | "RESELLER";
+  createdAt: Date;
+}
+
+const UserSchema: Schema<IUser> = new Schema({
+  clerkId: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  role: { type: String, enum: ["USER", "ADMIN", "RESELLER"], default: "USER" },
+  createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+export default models.User || model<IUser>("User", UserSchema);
